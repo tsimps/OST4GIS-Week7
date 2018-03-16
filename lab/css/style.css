@@ -27,8 +27,27 @@ p.main {
     font-size: 16px;
 }
 
+.sidebar button {
+  positon: absolute;
+  left: 100px;
+  z-index: 2;
+}
+
 .legend {
   position: absolute;
-  background-color: #fff;
+  background-color: white;
   z-index: 2000;
+  right: 50px;
+  bottom: 50px;
+  width: 200px;
+  height: 350px;
+  list-style: none;
 }
+/* your colors */
+.legend .Monday { background-color: red; opacity: 0.4;}
+.legend .Tuesday { background-color: blue; opacity: 0.4;}
+.legend .Wednesday { background-color: green; opacity: 0.4;}
+.legend .Thursday { background-color: yellow; opacity: 0.4;}
+.legend .Friday { background-color: pink; opacity: 0.4;}
+.legend .Saturday { background-color: grey; opacity: 0.4;}
+.legend .Sunday { background-color: orange; opacity: 0.4;}

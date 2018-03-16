@@ -125,11 +125,34 @@ of the application to report this information.
 
 ===================== */
 
-var dataset = ""
+var dataset = 'https://raw.githubusercontent.com/CPLN-692-401/datasets/master/geojson/philadelphia-garbage-collection-boundaries.geojson';
 var featureGroup;
 
 var myStyle = function(feature) {
-  return {};
+
+    if(feature.properties.COLLDAY === 'MON') {
+      return {fillColor: 'red'};
+    }
+    if (feature.properties.COLLDAY === 'TUE') {
+      return {fillColor: 'blue'};
+    }
+    if (feature.properties.COLLDAY === 'WED') {
+      return {fillColor: 'green'};
+    }
+    if (feature.properties.COLLDAY === 'THU') {
+      return {fillColor: 'yellow'};
+    }
+    if (feature.properties.COLLDAY === 'FRI') {
+      return {fillColor: 'pink'};
+    }
+    if (feature.properties.COLLDAY === 'SAT') {
+      return {fillColor: 'grey'};
+    }
+    if (feature.properties.COLLDAY === 'SUN') {
+      return {fillColor: 'orange'};
+    }
+    else return {fillColor: 'black'};
+
 };
 
 var showResults = function() {
@@ -145,6 +168,25 @@ var showResults = function() {
   $('#results').show();
 };
 
+var hideResults = function() {
+  $('#results').hide();
+  $('#intro').show();
+  map.setView([40.000, -75.1090]);
+  map.setZoom(11);
+};
+
+function convertCOLLDAY(abbr) {
+  switch (abbr) {
+    case 'MON': return 'Monday';
+    case 'TUE': return 'Tuesday';
+    case 'WED': return 'Wednesday';
+    case 'THU': return 'Thursday';
+    case 'FRI': return 'Friday';
+    case 'SAT': return 'Saturday';
+    case 'SUN': return 'Sunday';
+    default: return 'Not Available';
+  }
+}
 
 var eachFeatureFunction = function(layer) {
   layer.on('click', function (event) {
@@ -154,12 +196,32 @@ var eachFeatureFunction = function(layer) {
     you can use in your application.
     ===================== */
     console.log(layer.feature);
+    $('.day-of-week').text(convertCOLLDAY(layer.feature.properties.COLLDAY));
     showResults();
+
+    $('.layer-id').text(featureGroup.getLayerId(layer));
+
+    map.fitBounds(event.target.getBounds());
   });
 };
 
 var myFilter = function(feature) {
+  if (feature.properties.COLLDAY === ' ') {
+    return false;
+  }
   return true;
+};
+
+var findHighest = function(features) {
+  data = features.toGeoJSON();
+
+  //console.log(layer.feature.properties.COLLDAY);
+  highest = _.countBy(data, function(num) {
+    return features.properties.num.COLLDAY.replace(" ", "_");
+  } );
+
+  console.log(highest);
+  return highest;
 };
 
 $(document).ready(function() {
@@ -172,5 +234,6 @@ $(document).ready(function() {
 
     // quite similar to _.each
     featureGroup.eachLayer(eachFeatureFunction);
+    findHighest(featureGroup);
   });
 });
